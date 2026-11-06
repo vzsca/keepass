@@ -4,64 +4,49 @@
 
 Dans cette maquette, les données Vaultwarden sont conservées dans le dossier local `vw-data/`, monté dans le conteneur sur `/data`.
 
-Les archives de sauvegarde contiennent la base du coffre et des données chiffrées. Elles peuvent donc rester sensibles et ne doivent jamais être déposées dans Git ni envoyées dans un espace public.
+Les archives de sauvegarde contiennent la base du coffre et des données chiffrées. Elles restent sensibles et ne doivent jamais être déposées dans Git ni envoyées dans un espace public.
 
-## Procédure de sauvegarde (PowerShell)
+## Sauvegarde réalisée
 
-Depuis le dossier du projet :
+Depuis le dossier du projet, la sauvegarde a été réalisée après l'arrêt de Vaultwarden :
 
-```powershell
+```cmd
+mkdir backups
 docker compose stop vaultwarden
-New-Item -ItemType Directory -Force -Path .\backup
-$stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-Compress-Archive -Path .\vw-data\* -DestinationPath ".\backup\vw-data-$stamp.zip"
+robocopy vw-data backups\vw-data /E
 docker compose start vaultwarden
 ```
 
-L'arrêt de Vaultwarden avant la copie évite de sauvegarder une base SQLite pendant qu'elle est en cours d'écriture.
+L'arrêt du service avant la copie évite de copier la base SQLite pendant qu'elle est en cours d'écriture. La sauvegarde est conservée localement dans `backups\vw-data`.
 
-Après l'opération, vérifier que l'archive existe et possède une taille non nulle :
+## Test de restauration réalisé
 
-```powershell
-Get-ChildItem .\backup
+Pour ne pas écraser les données du coffre principal, une copie de travail distincte a été utilisée :
+
+```cmd
+mkdir restauration-test
+robocopy backups\vw-data restauration-test /E
 ```
 
-Conserver une copie de l'archive dans un emplacement distinct du dossier de travail. Ne pas la versionner.
+Cette copie a ensuite été ouverte dans une instance Vaultwarden temporaire, séparée de l'instance principale. Un accès HTTPS temporaire via Caddy a été mis en place, car l'interface client Vaultwarden refuse une connexion HTTP non sécurisée.
 
-## Procédure de restauration
+Le test a été déclaré concluant après vérification de l'accès aux données restaurées. Le coffre principal n'a pas été remplacé par la copie de test.
 
-> La restauration remplace les données présentes. Vérifier le nom et l'intégrité de l'archive avant toute opération.
-
-1. Arrêter Vaultwarden.
-2. Renommer le dossier actuel `vw-data` afin de le conserver en sauvegarde de sécurité.
-3. Recréer un dossier `vw-data` vide.
-4. Extraire l'archive choisie dans ce dossier.
-5. Redémarrer Vaultwarden.
-6. Se connecter avec un compte de test et contrôler la présence des utilisateurs, collections et éléments attendus.
-
-Exemple PowerShell, en adaptant le nom de l'archive :
-
-```powershell
-docker compose stop vaultwarden
-Rename-Item .\vw-data ".\vw-data-avant-restauration"
-New-Item -ItemType Directory -Path .\vw-data
-Expand-Archive -Path .\backup\vw-data-AAAA-MM-JJ-HHMMSS.zip -DestinationPath .\vw-data
-docker compose start vaultwarden
-docker compose logs --tail=30 vaultwarden
-```
-
-Si le service ne redémarre pas ou si les données attendues sont absentes, arrêter de nouveau Vaultwarden et remettre en place le dossier `vw-data-avant-restauration`.
-
-## État du test
-
-**Test de restauration : à effectuer.** La procédure est documentée, mais le test réel de restauration n'a pas encore été confirmé. Après le test, noter la date, l'archive utilisée, les comptes/collections retrouvés et le résultat.
+## Résultat
 
 | Contrôle | Résultat |
 |---|---|
-| Archive créée | À compléter |
-| Taille de l'archive vérifiée | À compléter |
-| Restauration effectuée | À effectuer |
-| Comptes retrouvés après restauration | À compléter |
-| Collections et éléments contrôlés | À compléter |
+| Arrêt du service avant copie | Réalisé |
+| Copie des données dans `backups\vw-data` | Réalisée |
+| Création d'une copie indépendante `restauration-test` | Réalisée |
+| Démarrage d'une instance temporaire de restauration | Réalisé |
+| Accès HTTPS à l'instance temporaire | Réalisé |
+| Vérification des données restaurées | Validée |
 
-Ne jamais exécuter `docker compose down -v` pour une simple opération d'arrêt : cette commande supprimerait les volumes Docker nommés.
+## Précautions
+
+- Conserver les sauvegardes hors du dépôt Git.
+- Ne pas partager les dossiers `vw-data`, `backups` ou `restauration-test`.
+- Ne jamais effectuer un test de restauration directement sur le coffre principal.
+- Conserver une copie de sécurité avant toute restauration réelle.
+- Ne pas exécuter `docker compose down -v` pour un simple arrêt : cette commande supprimerait les volumes Docker nommés.
