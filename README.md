@@ -12,7 +12,8 @@ Déploiement local d'un coffre de mots de passe destiné à une agence immobili�
 - Tester la révocation des accès lors du départ d'un salarié.
 - Formaliser les règles de gestion des mots de passe.
 - Vérifier cinq adresses avec Have I Been Pwned (HIBP).
-- Documenter la sauvegarde et la restauration des données.
+- Créer des identifiants fictifs et renouveler des mots de passe.
+- Tester la sauvegarde et la restauration des données.
 
 ## Architecture réalisée
 
@@ -60,25 +61,25 @@ docker compose ps
 
 La procédure complète, notamment l'installation du certificat Caddy, est dans [docs/installation.md](docs/installation.md).
 
-## État des validations
+## Bilan des validations
 
 | Élément | État |
 |---|---|
 | Services Docker démarrés | Réalisé |
 | Accès à Vaultwarden en HTTPS | Réalisé |
 | Organisation `Agence` et collections | Réalisé |
-| Compte négociateur et droits de collection | Réalisé |
+| Compte négociateur et droits de collection | Testés |
 | Révocation du membre | Testée |
-| Cinq recherches d'adresses HIBP | Réalisées, aucun résultat positif signalé |
-| Dix identifiants fictifs rangés | À compléter |
-| Rotation des six secrets après départ | À compléter |
-| Sauvegarde et restauration réellement testées | À compléter |
-| Captures d'écran des preuves | À ajouter |
+| Cinq recherches d'adresses HIBP | Réalisées, aucune fuite connue signalée |
+| Dix identifiants fictifs | Créés, cinq par collection |
+| Renouvellement de six mots de passe | Réalisé |
+| Sauvegarde des données | Réalisée |
+| Restauration sur une instance de test isolée | Testée et validée |
 
-Les statuts sont détaillés dans les documents du dossier `docs/`. Les éléments indiqués « à compléter » ne sont pas présentés comme des tests réussis.
+Les résultats et procédures sont détaillés dans le dossier `docs/`. Les recherches HIBP concernaient les adresses e-mail : elles ne constituent pas un contrôle exhaustif des mots de passe.
 
 ## Sécurité et fichiers à ne pas publier
 
-Le dépôt ne doit contenir aucun secret ni donnée réelle. Le fichier `.env`, le contenu de `vw-data/`, les archives de sauvegarde, les certificats privés et les captures contenant des identifiants ou des mots de passe sont exclus par `.gitignore`.
+Le dépôt ne doit contenir aucun secret ni donnée réelle. Le fichier `.env`, le contenu de `vw-data/`, les archives de sauvegarde, les dossiers de restauration, les certificats privés et les captures contenant des identifiants ou des mots de passe sont exclus par `.gitignore`.
 
-Les identifiants de démonstration doivent être fictifs et les mots de passe ne doivent jamais être ajoutés à Git.
+Les identifiants de démonstration sont fictifs. Les mots de passe ne doivent jamais être ajoutés à Git.
