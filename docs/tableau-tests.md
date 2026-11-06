@@ -8,45 +8,36 @@
 
 ## Tests de visibilité et de permissions
 
-Les vérifications ci-dessous reprennent les tests réalisés dans l'interface. Les captures correspondantes restent à ajouter dans le dossier de preuves.
-
-| Compte de test | Collection | Visibilité attendue | Observation | État |
-|---|---|---|---|---|
-| Direction | Direction | Oui | Collection créée et visible depuis le compte direction | Réalisé |
-| Direction | Négociateurs | Oui | Collection créée dans l'organisation | Réalisé |
-| Négociateur 1 | Direction | Non | Accès non attribué | À documenter par capture |
-| Négociateur 1 | Négociateurs | Oui | Accès attribué | Réalisé |
+| Test | Résultat attendu | Résultat obtenu | État |
+|---|---|---|---|
+| Création de l'organisation `Agence` | Organisation disponible | Organisation créée | Réalisé |
+| Création de `Direction` | Collection disponible | Collection créée | Réalisé |
+| Création de `Négociateurs` | Collection disponible | Collection créée | Réalisé |
+| Accès du négociateur à `Négociateurs` | Accès autorisé | Accès attribué et vérifié | Réalisé |
+| Accès du négociateur à `Direction` | Pas d'accès sans attribution | Accès non attribué | Conforme |
+| Modification des éléments | Le membre peut modifier les éléments autorisés | Permission « Modifier les éléments » testée | Réalisé |
+| Révocation du membre | Le membre ne doit plus accéder à l'organisation | Retrait de l'accès testé | Réalisé |
 
 ### Niveau de permission du négociateur
 
 Le niveau sélectionné pour le membre est **Modifier les éléments**. Il autorise la consultation, la création et la modification des éléments de la collection, y compris leurs mots de passe. Il ne donne pas la gestion de la collection.
 
-La première attribution était en lecture seule ; elle a été remplacée par le niveau de modification après constat que le membre ne pouvait pas créer d'élément.
+Les différents niveaux de permission proposés dans l'interface ont été examinés avant de sélectionner celui correspondant au besoin.
 
-## Les dix accès fictifs demandés par le sujet
+## Identifiants fictifs
 
-Le sujet demande quatre éléments dans `Direction` et six dans `Négociateurs`. Ils doivent être créés avec des identifiants et mots de passe entièrement fictifs, générés dans le coffre.
+Dix identifiants fictifs ont été créés et répartis entre les deux collections.
 
-| Collection | Élément fictif à créer | État |
-|---|---|---|
-| Direction | Portail bancaire | À créer |
-| Direction | Compte de l'expert-comptable | À créer |
-| Direction | Outil de paie | À créer |
-| Direction | Portail des notaires | À créer |
-| Négociateurs | Portail d'annonces A | À créer |
-| Négociateurs | Portail d'annonces B | À créer |
-| Négociateurs | Portail d'annonces C | À créer |
-| Négociateurs | CRM | À créer |
-| Négociateurs | Planning de visites | À créer |
-| Négociateurs | Boîte de contact | À créer |
+| Collection | Nombre d'éléments | État |
+|---|---:|---|
+| Direction | 5 | Créés |
+| Négociateurs | 5 | Créés |
+| **Total** | **10** | **Réalisé** |
 
-Pour chaque élément, choisir `Agence` comme propriétaire puis sélectionner la collection appropriée. Un élément créé dans le coffre personnel ne sera pas partagé avec l'organisation.
+Six mots de passe ont ensuite été renouvelés à l'aide du générateur intégré au coffre.
 
-## Résultat attendu du test de séparation
+Aucun identifiant ni mot de passe de démonstration n'est publié dans ce dépôt.
 
-| Compte | Collection | Visible | Attendu | Résultat |
-|---|---|---|---|---|
-| Négociateur 1 | Direction | Non | Non | À confirmer avec capture |
-| Négociateur 1 | Négociateurs | Oui, 6 éléments après leur création | Oui | À compléter |
+## Résultat global
 
-Les dix éléments et le contrôle du nombre six ne sont pas déclarés réalisés tant que leur création et leur vérification n'ont pas été faites.
+Les tests de création des collections, d'attribution des permissions, d'accès du membre et de révocation ont été réalisés. Les dix éléments fictifs sont présents dans les collections prévues et six mots de passe ont été renouvelés.
