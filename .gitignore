@@ -1,0 +1,20 @@
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+
+# Données Vaultwarden et sauvegardes
+vw-data/
+backup/
+*.tgz
+*.tar.gz
+*.zip
+
+# Certificats locaux et clés privées
+root.crt
+*.key
+*.pem
+
+# Fichiers temporaires
+.DS_Store
+Thumbs.db
