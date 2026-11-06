@@ -1,0 +1,5 @@
+vault.lan {
+    tls internal
+    encode zstd gzip
+    reverse_proxy vaultwarden:80
+}
