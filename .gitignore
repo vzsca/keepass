@@ -6,6 +6,9 @@
 # Données Vaultwarden et sauvegardes
 vw-data/
 backup/
+backups/
+restauration-test/
+restauration-caddy/
 *.tgz
 *.tar.gz
 *.zip
